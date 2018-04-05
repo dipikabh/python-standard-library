@@ -1,6 +1,5 @@
 
 import datetime
-import sys
 
 class DateInFutureException(Exception):
     pass

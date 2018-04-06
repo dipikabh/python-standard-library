@@ -11,7 +11,8 @@ Problem: Analyze the first ten years of stock data for Google (https://www.youtu
         - `datetime.strptime`, `strftime`
 
 2. datetime<br>
-Problem: Find days remaining to the birthday and age of the person
+Problem: Find days remaining to the birthday and age of the person<br>
+Note: Read the README.md in datetime directory for mor information.
     - Documented function behavior using [Sphinx's Napoleon extension](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/) based on the Google Style
     - Restructured code under the main body of the file
     - `try/except/raise` statements

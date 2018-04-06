@@ -13,17 +13,21 @@ def ask_birthday():
         except ValueError as e:
             print e
         except DateInFutureException as e:
+            print ""
             print e
+            print ""
 
 def ask_to_continue():
     while True:
-        user_answer = (raw_input("Find days remaining to a birthday? (Y/N): ")).lower()
+        user_answer = (raw_input("Find days remaining to another birthday? (Y/N): ")).lower()
         if user_answer == "y":
             return True
         elif user_answer == "n":
             return False
         else:
+            print ""
             print "Sorry, invalid input"
+            print ""
 
 def parse_and_validate_birthday(user_input):
     """
@@ -83,19 +87,19 @@ def days_to_birthday(birthday):
     Examples:
         A birthday in future
         >>> days_to_birthday(datetime.datetime(1978, 7, 21))
-        (106, 'Saturday', 40)
+        (105, 'Saturday', 40)
 
         A birthday in the past, same month
         >>> days_to_birthday(datetime.datetime(1975, 4, 1))
-        (360, 'Monday', 44)
+        (359, 'Monday', 44)
 
         A birthday in future, same month
         >>> days_to_birthday(datetime.datetime(1975, 4, 21))
-        (15, 'Saturday', 43)
+        (14, 'Saturday', 43)
 
         A birthday in future, another month
         >>> days_to_birthday(datetime.datetime(1978, 1, 21))
-        (290, 'Monday', 41)
+        (289, 'Monday', 41)
     """
     # creating a datetime object for today's date
     dt_today = datetime.datetime.today()
@@ -149,7 +153,7 @@ if __name__ == "__main__":
             print ""
         else:
             print ""
-            print "The given birthday is {} days away and will fall on {}.".format(days, weekday)
+            print "The given birthday is {} days away and will fall on a {}.".format(days, weekday)
             print "The person will be {} years old.".format(age)
             print "BONUS: The birthday in 2020 will fall on a {}.".format(birthday_on_day_of_week(birthday, 2020))
             print ""

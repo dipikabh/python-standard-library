@@ -4,7 +4,7 @@ import datetime
 class DateInFutureException(Exception):
     pass
 
-def parse_and_validate(user_input):
+def parse_and_validate_birthday(user_input):
     """
     Parses and validates given string for a date and returns a datetime object.
     
@@ -20,17 +20,17 @@ def parse_and_validate(user_input):
 
     Examples:
         A valid input string
-        >>> parse_and_validate('2012/07/23')
+        >>> parse_and_validate_birthday('2012/07/23')
         datetime.datetime(2012, 7, 23, 0, 0)
 
         Invalid input string - letters instead of a date
-        >>> parse_and_validate('abcd')
+        >>> parse_and_validate_birthday('abcd')
         Traceback (most recent call last):
         ...
         ValueError: time data 'abcd' does not match format '%Y/%m/%d'
 
         A valid input string but date in future
-        >>> parse_and_validate('2018/12/23')
+        >>> parse_and_validate_birthday('2018/12/23')
         Traceback (most recent call last):
         ...
         DateInFutureException: This birthday is in the future! Enter a valid date of birth.
@@ -45,15 +45,16 @@ def parse_and_validate(user_input):
 
 def days_to_birthday(birthday):
     """
-    Returns number of days to a given birthday and the age of the person.
+    Returns a tuple of number of days remaining for a given birthday, day of the week, and the age of the person.
     
     Args:
         birthday: A datetime object for the birthday
     
     Returns:
-        A tuple of (days, age)
-        days_to_birthday.days: Returns number of days remaining for the next birthday
-        user_age: Returns the age of the person with the given birthday
+        A tuple of (days, weekday, age)
+        days_to_birthday.days (int): Returns number of days remaining for the next birthday
+        day_of_week (str): Returns the day of the week on which the birthday falls
+        user_age (int): Returns the age of the person with the given birthday
 
     Note:
         The doctests in the Examples section will fail in future because answers correspond to today's date.
@@ -61,45 +62,70 @@ def days_to_birthday(birthday):
     Examples:
         A birthday in future
         >>> days_to_birthday(datetime.datetime(1978, 7, 21))
-        (106, 40)
+        (106, 'Saturday', 40)
 
         A birthday in the past, same month
         >>> days_to_birthday(datetime.datetime(1975, 4, 1))
-        (360, 44)
+        (360, 'Monday', 44)
 
         A birthday in future, same month
         >>> days_to_birthday(datetime.datetime(1975, 4, 21))
-        (15, 43)
+        (15, 'Saturday', 43)
 
         A birthday in future, another month
         >>> days_to_birthday(datetime.datetime(1978, 1, 21))
-        (290, 41)
+        (290, 'Monday', 41)
     """
-
+    # creating a datetime object for today's date
     dt_today = datetime.datetime.today()
+    # creating a datetime object for birthday this year
     birthday_this_year = datetime.datetime(dt_today.year, birthday.month, birthday.day)
+    # creating a datetime object for birthday next year
     birthday_next_year = datetime.datetime((dt_today.year + 1), birthday.month, birthday.day)
 
-    # birthday this year, yet to come
+    # if birthday in future
     if birthday_this_year >= dt_today:
         days_to_birthday = birthday_this_year - dt_today
         user_age = dt_today.year - birthday.year
-    # birthday this year, already passed
+        day_of_week = birthday_this_year.strftime("%A")
+    # if birthday in past
     else:
         days_to_birthday = birthday_next_year - dt_today
         user_age = (dt_today.year + 1) - birthday.year
+        day_of_week = birthday_next_year.strftime("%A")
 
-    return (days_to_birthday.days, user_age)
+    return (days_to_birthday.days, day_of_week, user_age)
 
+def birthday_on_day_of_week(birthday, year):
+    """
+    Returns the day of the week a birthday will fall in the given year
+
+    Args:
+        birthday: A datetime object for the birthday
+        year (int): A year for which day of the week needs to be determined for the birthday
+    
+    Returns:
+        birthday_given_year.strftime("%A") (str): A day of the week
+
+    Examples:
+        >>> birthday_on_day_of_week(datetime.datetime(1978, 7, 21), 2020)
+        'Tuesday'
+
+        >>> birthday_on_day_of_week(datetime.datetime(1978, 5, 17), 2019)
+        'Friday'
+    """
+    birthday_given_year = datetime.datetime(year, birthday.month, birthday.day)
+
+    return birthday_given_year.strftime("%A")
 
 if __name__ == "__main__":
     while True:
-        user_answer = raw_input("Find days remaining to birthday and age? (Y/N): ")
+        user_answer = raw_input("Find days remaining to a birthday? (Y/N): ")
         if user_answer.lower() == "y":
             while True:
-                user_input = raw_input("What is your date of birth (yyyy/mm/dd): ")
+                user_input = raw_input("Enter a date of birth (yyyy/mm/dd): ")
                 try:
-                    birthday = parse_and_validate(user_input)
+                    birthday = parse_and_validate_birthday(user_input)
                     break
                 except ValueError as e:
                     print e
@@ -107,11 +133,17 @@ if __name__ == "__main__":
                     print e
                     
             
-            (days, age) = days_to_birthday(birthday)
+            (days, weekday, age) = days_to_birthday(birthday)
             if days == 0:
-                print "The given birthday is today! The person is {} years old today.".format(age)
+                print ""
+                print "The given birthday is today ({})! The person is {} years old today.".format(weekday, age)
+                print ""
             else:
-                print "The given birthday is {} days away. The person will be {} years old on his/her next birthday.".format(days, age)
+                print ""
+                print "The given birthday is {} days away and will fall on {}.".format(days, weekday)
+                print "The person will be {} years old.".format(age)
+                print "BONUS: The birthday in 2020 will fall on a {}.".format(birthday_on_day_of_week(birthday, 2020))
+                print ""
         elif user_answer == "n":
             break
         else:

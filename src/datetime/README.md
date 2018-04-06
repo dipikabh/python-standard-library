@@ -27,4 +27,5 @@ $
 
 ## Changelog
 
+- 2018-04-05 21:43: Used datetime.replace() to create similar datetime objects
 - 2018-04-05 21:38: Moved the user prompts to their own functions. Added readme and changelog.

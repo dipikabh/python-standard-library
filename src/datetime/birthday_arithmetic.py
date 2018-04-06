@@ -102,7 +102,7 @@ def days_to_birthday(birthday):
     # creating a datetime object for birthday this year
     birthday_this_year = datetime.datetime(dt_today.year, birthday.month, birthday.day)
     # creating a datetime object for birthday next year
-    birthday_next_year = datetime.datetime((dt_today.year + 1), birthday.month, birthday.day)
+    birthday_next_year = birthday.replace(year=dt_today.year + 1)
 
     # if birthday in future
     if birthday_this_year >= dt_today:

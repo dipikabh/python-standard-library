@@ -4,6 +4,27 @@ import datetime
 class DateInFutureException(Exception):
     pass
 
+def ask_birthday():
+    while True:
+        user_input = raw_input("Enter a date of birth (yyyy/mm/dd): ")
+        try:
+            birthday = parse_and_validate_birthday(user_input)
+            return birthday
+        except ValueError as e:
+            print e
+        except DateInFutureException as e:
+            print e
+
+def ask_to_continue():
+    while True:
+        user_answer = (raw_input("Find days remaining to a birthday? (Y/N): ")).lower()
+        if user_answer == "y":
+            return True
+        elif user_answer == "n":
+            return False
+        else:
+            print "Sorry, invalid input"
+
 def parse_and_validate_birthday(user_input):
     """
     Parses and validates given string for a date and returns a datetime object.
@@ -52,9 +73,9 @@ def days_to_birthday(birthday):
     
     Returns:
         A tuple of (days, weekday, age)
-        days_to_birthday.days (int): Returns number of days remaining for the next birthday
-        day_of_week (str): Returns the day of the week on which the birthday falls
-        user_age (int): Returns the age of the person with the given birthday
+        days (int): Returns number of days remaining for the next birthday
+        weekday (str): Returns the day of the week on which the birthday falls
+        age (int): Returns the age of the person with the given birthday
 
     Note:
         The doctests in the Examples section will fail in future because answers correspond to today's date.
@@ -120,33 +141,20 @@ def birthday_on_day_of_week(birthday, year):
 
 if __name__ == "__main__":
     while True:
-        user_answer = raw_input("Find days remaining to a birthday? (Y/N): ")
-        if user_answer.lower() == "y":
-            while True:
-                user_input = raw_input("Enter a date of birth (yyyy/mm/dd): ")
-                try:
-                    birthday = parse_and_validate_birthday(user_input)
-                    break
-                except ValueError as e:
-                    print e
-                except DateInFutureException as e:
-                    print e
-                    
-            
-            (days, weekday, age) = days_to_birthday(birthday)
-            if days == 0:
-                print ""
-                print "The given birthday is today ({})! The person is {} years old today.".format(weekday, age)
-                print ""
-            else:
-                print ""
-                print "The given birthday is {} days away and will fall on {}.".format(days, weekday)
-                print "The person will be {} years old.".format(age)
-                print "BONUS: The birthday in 2020 will fall on a {}.".format(birthday_on_day_of_week(birthday, 2020))
-                print ""
-        elif user_answer == "n":
-            break
+        birthday = ask_birthday()
+        (days, weekday, age) = days_to_birthday(birthday)
+        if days == 0:
+            print ""
+            print "The given birthday is today ({})! The person is {} years old today.".format(weekday, age)
+            print ""
         else:
-            print "Sorry, invalid input"
+            print ""
+            print "The given birthday is {} days away and will fall on {}.".format(days, weekday)
+            print "The person will be {} years old.".format(age)
+            print "BONUS: The birthday in 2020 will fall on a {}.".format(birthday_on_day_of_week(birthday, 2020))
+            print ""
+        
+        if not ask_to_continue():
+            break
 
     
